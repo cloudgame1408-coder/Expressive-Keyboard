@@ -143,8 +143,8 @@ import kotlin.math.sqrt
 internal fun ThemeModeItem(settings: KeyboardSettings) {
     val context = LocalContext.current
     ChoiceItem(
-        Icons.Rounded.DarkMode, "Светлая или тёмная", "AMOLED — чистый чёрный для OLED-экранов",
-        listOf("SYSTEM" to "Авто", "LIGHT" to "Светлая", "DARK" to "Тёмная", "AMOLED" to "AMOLED"),
+        Icons.Rounded.DarkMode, "Sáng hoặc tối", "AMOLED — màu đen tuyệt đối cho màn hình OLED",
+        listOf("SYSTEM" to "Tự động", "LIGHT" to "Sáng", "DARK" to "Tối", "AMOLED" to "AMOLED"),
         settings.themeMode
     ) { mode -> KeyboardPrefs.edit(context) { putString("theme_mode", mode) } }
 }
@@ -164,7 +164,7 @@ internal fun FontSections(settings: KeyboardSettings) {
             } else Toast.makeText(context, tr("Нужен корректный файл .ttf или .otf"), Toast.LENGTH_LONG).show()
         }
     }
-    SettingsSection("Шрифт") {
+    SettingsSection("Phông chữ") {
         if (settings.skinPlugin.isNotEmpty()) {
             GroupItem {
                 Text(
@@ -174,55 +174,55 @@ internal fun FontSections(settings: KeyboardSettings) {
             }
         }
         ChoiceItem(
-            Icons.Rounded.TextFields, "Начертание",
+            Icons.Rounded.TextFields, "Kiểu chữ",
             if (settings.fontStyle == "CUSTOM") tr("Свой шрифт: {0}", settings.customFontName) else "Округлый — как на макете",
-            listOf("ROUNDED" to "Округлый", "SYSTEM" to "Системный", "SERIF" to "Serif", "MONOSPACE" to "Mono", "PIXEL" to "Пиксели"),
+            listOf("ROUNDED" to "Bo tròn", "SYSTEM" to "Mặc định hệ thống", "SERIF" to "Serif", "MONOSPACE" to "Mono", "PIXEL" to "Pixel"),
             settings.fontStyle
         ) { f -> KeyboardPrefs.edit(context) { putString("font_style", f) } }
         SliderItem(
-            icon = Icons.Rounded.FormatBold, title = "Толщина букв",
+            icon = Icons.Rounded.FormatBold, title = "Độ đậm chữ",
             value = settings.fontWeight.toFloat(), range = 300f..900f, steps = 5,
             format = {
                 when (it.roundToInt() / 100 * 100) {
-                    300 -> tr("Тонкий"); 400 -> tr("Обычный"); 500 -> tr("Средний"); 600 -> tr("Полужирный"); 700 -> tr("Жирный"); 800 -> tr("Очень жирный")
-                    else -> tr("Чёрный")
+                    300 -> tr("Mảnh"); 400 -> tr("Thường"); 500 -> tr("Trung bình"); 600 -> tr("Bán đậm"); 700 -> tr("Đậm"); 800 -> tr("Rất đậm")
+                    else -> tr("Đen")
                 }
             },
             onCommit = { v -> KeyboardPrefs.edit(context) { putInt("font_weight", (v / 100f).roundToInt() * 100) } }
         )
         SliderItem(
-            icon = Icons.Rounded.FormatSize, title = "Размер букв",
+            icon = Icons.Rounded.FormatSize, title = "Cỡ chữ",
             value = settings.keyLabelScale, range = 0.7f..1.4f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("key_label_scale", v) } }
         )
         ActionItem(
             icon = Icons.Rounded.FontDownload,
-            title = "Загрузить свой шрифт",
-            subtitle = "Файл .ttf или .otf",
+            title = "Tải phông chữ tùy chỉnh",
+            subtitle = "Tệp .ttf hoặc .otf",
             onClick = { fontLauncher.launch("*/*") },
             trailing = if (settings.customFontName.isNotEmpty()) {
                 {
                     IconButton(onClick = { KeyboardPrefs.resetCustomFont(context) }) {
-                        Icon(Icons.Rounded.DeleteOutline, tr("Удалить шрифт"), tint = cs.error)
+                        Icon(Icons.Rounded.DeleteOutline, tr("Xóa phông chữ"), tint = cs.error)
                     }
                 }
             } else null
         )
     }
     // волнистая форма «печенек»: кнопки меню и микрофона, подсказка над клавишей (если у темы нет своих)
-    SettingsSection("Форма кнопок") {
+    SettingsSection("Hình dạng phím") {
         GroupItem { Column(Modifier.padding(vertical = 16.dp)) { ShapePicker(settings) } }
         // у готовых форм (сердце, ромб, стрелка…) и круга волн нет
         val tunable = ExpressiveShapePreset.fromId(settings.shapePreset).tunable
         if (tunable) SliderItem(
-            icon = Icons.Rounded.AutoAwesome, title = "Количество волн",
+            icon = Icons.Rounded.AutoAwesome, title = "Số lượng gợn sóng",
             value = settings.waveCount.toFloat(), range = 4f..18f, steps = 13,
             format = { "${it.roundToInt()}" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putInt("wave_count", v.roundToInt()) } }
         )
         if (tunable) SliderItem(
-            icon = Icons.Rounded.Tune, title = "Глубина волн",
+            icon = Icons.Rounded.Tune, title = "Độ sâu gợn sóng",
             value = settings.waveAmplitudePercent, range = 0f..14f,
             format = { "${it.roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("wave_amplitude_percent", v) } }
@@ -273,8 +273,8 @@ internal fun ColorsPage(settings: KeyboardSettings) {
     val themeColors = PluginRepository.skinPlugin(settings)?.skin?.forMode(keyboardIsDark(settings))?.colors
     val themeAccent = themeColors?.get("accent")?.let { Color(it) }
     val themeAccentText = themeColors?.get("accentText")?.let { Color(it) }
-    SettingsSection("Акцентный цвет") {
-        ColorRow("Акцент: Enter, Shift, нажатие, подсветка", settings.colorAccent, themeAccent ?: auto.accent) { picker = ColorTarget("color_accent", "Акцент") }
+    SettingsSection("Màu nhấn") {
+        ColorRow("Акцент: Enter, Shift, нажатие, подсветка", settings.colorAccent, themeAccent ?: auto.accent) { picker = ColorTarget("color_accent", "Màu nhấn") }
         ColorRow("Текст на акценте", settings.colorAccentText, themeAccentText ?: auto.onAccent) { picker = ColorTarget("color_accent_text", "Текст на акценте") }
         GroupItem {
             Text(
@@ -286,7 +286,7 @@ internal fun ColorsPage(settings: KeyboardSettings) {
             )
         }
     }
-    SettingsSection("Формы") {
+    SettingsSection("Hình dạng") {
         GroupItem {
             Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 ShapeAmountPicker(settings)
@@ -297,12 +297,12 @@ internal fun ColorsPage(settings: KeyboardSettings) {
             }
         }
     }
-    SettingsSection("Палитра") {
+    SettingsSection("Bảng màu") {
         ChoiceItem(
-            Icons.Rounded.Palette, "Палитра Material You",
+            Icons.Rounded.Palette, "Bảng màu Material You",
             if (settings.colorSource == "SEED") "Вся тема строится из выбранного цвета"
             else if (monet) "Цвета берутся из обоев (Monet)" else "Monet доступен с Android 12 — используется базовая палитра",
-            listOf("DYNAMIC" to "Из обоев", "SEED" to "Свой цвет"),
+            listOf("DYNAMIC" to "Từ hình nền", "SEED" to "Màu tùy chỉnh"),
             settings.colorSource
         ) { v -> KeyboardPrefs.edit(context) { putString("color_source", v) } }
         AnimatedVisibility(
@@ -319,16 +319,16 @@ internal fun ColorsPage(settings: KeyboardSettings) {
                             }
                         }
                     }
-                    FilledTonalButton(onClick = { picker = ColorTarget("seed_color", "Основной цвет") }, modifier = Modifier.fillMaxWidth()) {
+                    FilledTonalButton(onClick = { picker = ColorTarget("seed_color", "Màu chính") }, modifier = Modifier.fillMaxWidth()) {
                         Icon(Icons.Rounded.Colorize, null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text(tr("Выбрать любой цвет"))
+                        Text(tr("Chọn màu bất kỳ"))
                     }
                 }
             }
         }
     }
-    SettingsSection("Цвета клавиш") {
+    SettingsSection("Màu phím") {
         if (settings.skinPlugin.isNotEmpty()) {
             GroupItem {
                 Text(
@@ -337,36 +337,36 @@ internal fun ColorsPage(settings: KeyboardSettings) {
                 )
             }
         }
-        ColorRow("Фон клавиатуры", settings.colorBackground, auto.background) { picker = ColorTarget("color_background", "Фон клавиатуры") }
-        ColorRow("Клавиши букв", settings.colorKey, auto.letter) { picker = ColorTarget("color_key", "Клавиши букв") }
-        ColorRow("Текст на буквах", settings.colorKeyText, auto.onLetter) { picker = ColorTarget("color_key_text", "Текст на буквах") }
-        ColorRow("Служебные клавиши", settings.colorFunc, auto.func) { picker = ColorTarget("color_func", "Служебные клавиши") }
-        ColorRow("Текст служебных", settings.colorFuncText, auto.onFunc) { picker = ColorTarget("color_func_text", "Текст служебных") }
+        ColorRow("Nền bàn phím", settings.colorBackground, auto.background) { picker = ColorTarget("color_background", "Nền bàn phím") }
+        ColorRow("Phím chữ", settings.colorKey, auto.letter) { picker = ColorTarget("color_key", "Phím chữ") }
+        ColorRow("Chữ trên phím", settings.colorKeyText, auto.onLetter) { picker = ColorTarget("color_key_text", "Chữ trên phím") }
+        ColorRow("Phím chức năng", settings.colorFunc, auto.func) { picker = ColorTarget("color_func", "Phím chức năng") }
+        ColorRow("Chữ trên phím chức năng", settings.colorFuncText, auto.onFunc) { picker = ColorTarget("color_func_text", "Chữ trên phím chức năng") }
         ToggleItem(
-            Icons.Rounded.Layers, "Подложка клавиш",
+            Icons.Rounded.Layers, "Nền phím",
             if (settings.keyBackground) "Плашки под буквами — как в теме"
-            else "Без плашек: только буквы на фоне. Их не видно и при размытии",
+            else "Không nền phím, chỉ hiển thị chữ trên nền; nền phím cũng không hiện khi làm mờ",
             settings.keyBackground
         ) { on -> KeyboardPrefs.edit(context) { putBoolean("key_background", on) } }
         SliderItem(
-            icon = Icons.Rounded.Opacity, title = "Непрозрачность клавиш",
+            icon = Icons.Rounded.Opacity, title = "Độ mờ phím",
             value = settings.keyOpacity, range = 0.2f..1f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("key_opacity", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.Opacity, title = "Прозрачность фона",
+            icon = Icons.Rounded.Opacity, title = "Độ trong suốt nền",
             value = settings.bgTransparency, range = 0f..1f,
-            format = { if (it < 0.01f) tr("Нет") else "${(it * 100).roundToInt()}%" },
+            format = { if (it < 0.01f) tr("Không") else "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("bg_transparency", v) } }
         )
-        ActionItem(Icons.Rounded.RestartAlt, "Вернуть цвета темы", "Сбросить акцент, ручные цвета и прозрачность", onClick = { KeyboardPrefs.resetColors(context) })
+        ActionItem(Icons.Rounded.RestartAlt, "Khôi phục màu chủ đề", "Сбросить акцент, ручные цвета и прозрачность", onClick = { KeyboardPrefs.resetColors(context) })
     }
     // система может запретить размытие окон: экономия заряда, «Уменьшить прозрачность», слабая видеокарта
     val blurAllowed = rememberWindowBlurSupported()
-    SettingsSection("Размытие") {
+    SettingsSection("Làm mờ") {
         ChoiceItem(
-            Icons.Rounded.BlurOn, "Размытие под клавиатурой",
+            Icons.Rounded.BlurOn, "Làm mờ nền phía dưới bàn phím",
             when {
                 Build.VERSION.SDK_INT < 31 -> "Нужен Android 12 или новее"
                 settings.windowBlur != "OFF" && !blurAllowed -> "Сейчас система не разрешает размытие окон: включена экономия заряда, «Уменьшить прозрачность/размытие» в спец. возможностях, или телефон его не поддерживает"
@@ -374,25 +374,25 @@ internal fun ColorsPage(settings: KeyboardSettings) {
                 settings.windowBlur == "OFF" -> "Обычный фон — экономнее всего"
                 else -> "Если тема его просит (например, «Жидкое стекло»)"
             },
-            listOf("THEME" to "Как в теме", "ON" to "Вкл", "OFF" to "Выкл"), settings.windowBlur
+            listOf("THEME" to "Как в теме", "ON" to "Bật", "OFF" to "Tắt"), settings.windowBlur
         ) { v -> KeyboardPrefs.edit(context) { putString("window_blur", v) } }
         if (settings.windowBlur != "OFF") {
             SliderItem(
-                Icons.Rounded.Opacity, "Сила размытия", settings.windowBlurDp, 4f..100f, { "${it.roundToInt()} dp" },
+                Icons.Rounded.Opacity, "Mức làm mờ", settings.windowBlurDp, 4f..100f, { "${it.roundToInt()} dp" },
                 onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("window_blur_dp", v) } }
             )
         }
     }
-    SettingsSection("Фон клавиатуры") {
+    SettingsSection("Nền bàn phím") {
         ActionItem(
             icon = Icons.Rounded.Wallpaper,
-            title = if (settings.hasBackgroundImage) "Сменить фон" else "Выбрать фон",
-            subtitle = if (importing) "Загрузка…" else "Фото или видео из галереи",
+            title = if (settings.hasBackgroundImage) "Đổi nền" else "Chọn nền",
+            subtitle = if (importing) "Đang tải…" else "Ảnh hoặc video từ thư viện",
             onClick = { if (!importing) bgLauncher.launch(arrayOf("image/*", "video/*")) },
             trailing = if (settings.hasBackgroundImage) {
                 {
                     IconButton(enabled = !importing, onClick = { KeyboardPrefs.clearBackgroundImage(context) }) {
-                        Icon(Icons.Rounded.DeleteOutline, tr("Убрать фон"), tint = cs.error)
+                        Icon(Icons.Rounded.DeleteOutline, tr("Xóa nền"), tint = cs.error)
                     }
                 }
             } else null
@@ -411,15 +411,15 @@ internal fun ColorsPage(settings: KeyboardSettings) {
                         Box(Modifier.matchParentSize().background(palette.background.copy(alpha = settings.bgDim)))
                     }
                 }
-                ChoiceItem(Icons.Rounded.Crop, "Размещение фона", null,
-                    listOf("COVER" to "Заполнить", "FIT" to "Вписать", "STRETCH" to "Растянуть"), frame.mode.name
+                ChoiceItem(Icons.Rounded.Crop, "Cách hiển thị nền", null,
+                    listOf("COVER" to "Lấp đầy", "FIT" to "Vừa khung", "STRETCH" to "Kéo giãn"), frame.mode.name
                 ) { mode -> KeyboardPrefs.edit(context) { putString("photo_fit", mode) } }
                 val sliders = listOf(
-                    Triple("Масштаб фона", "photo_zoom", frame.zoom to (0.5f..3f)),
-                    Triple("Ширина фона", "photo_width", frame.width to (0.5f..2f)),
-                    Triple("Высота фона", "photo_height", frame.height to (0.5f..2f)),
-                    Triple("Сдвиг фона по горизонтали", "photo_x", frame.x to (-1f..1f)),
-                    Triple("Сдвиг фона по вертикали", "photo_y", frame.y to (-1f..1f))
+                    Triple("Tỷ lệ nền", "photo_zoom", frame.zoom to (0.5f..3f)),
+                    Triple("Chiều rộng nền", "photo_width", frame.width to (0.5f..2f)),
+                    Triple("Chiều cao nền", "photo_height", frame.height to (0.5f..2f)),
+                    Triple("Dịch nền theo chiều ngang", "photo_x", frame.x to (-1f..1f)),
+                    Triple("Dịch nền theo chiều dọc", "photo_y", frame.y to (-1f..1f))
                 )
                 for ((title, pref, control) in sliders) {
                     SliderItem(
@@ -428,23 +428,23 @@ internal fun ColorsPage(settings: KeyboardSettings) {
                         onCommit = { v -> KeyboardPrefs.edit(context) { putFloat(pref, v) } }
                     )
                 }
-                ActionItem(Icons.Rounded.RestartAlt, "Сбросить положение фона", null, onClick = {
+                ActionItem(Icons.Rounded.RestartAlt, "Đặt lại vị trí nền", null, onClick = {
                     KeyboardPrefs.edit(context) {
                         remove("photo_fit")
                         sliders.forEach { remove(it.second) }
                     }
                 })
                 SliderItem(
-                    icon = Icons.Rounded.Brightness6, title = "Затемнение",
+                    icon = Icons.Rounded.Brightness6, title = "Làm tối",
                     value = settings.bgDim, range = 0f..0.9f,
                     format = { "${(it * 100).roundToInt()}%" },
                     onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("bg_dim", v) } }
                 )
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     SliderItem(
-                        icon = Icons.Rounded.BlurOn, title = "Размытие",
+                        icon = Icons.Rounded.BlurOn, title = "Làm mờ",
                         value = settings.bgBlurDp, range = 0f..24f,
-                        format = { if (it < 0.5f) tr("Нет") else "${it.roundToInt()} dp" },
+                        format = { if (it < 0.5f) tr("Không") else "${it.roundToInt()} dp" },
                         onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("bg_blur_dp", v) } }
                     )
                 }
@@ -478,73 +478,73 @@ internal fun ColorsPage(settings: KeyboardSettings) {
 @Composable
 internal fun KeyboardSizePage(settings: KeyboardSettings) {
     val context = LocalContext.current
-    SettingsSection("Размеры") {
+    SettingsSection("Kích thước") {
         SliderItem(
-            icon = Icons.Rounded.Height, title = "Высота клавиш",
+            icon = Icons.Rounded.Height, title = "Chiều cao phím",
             // на планшете (от 600 dp) клавиши можно сделать заметно выше
             value = settings.keyHeightDp, range = 32f..(if (LocalConfiguration.current.smallestScreenWidthDp >= 600) 96f else 68f),
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("key_height_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.Straighten, title = "Ширина клавиатуры",
+            icon = Icons.Rounded.Straighten, title = "Chiều rộng bàn phím",
             value = settings.keyboardWidth, range = 0.5f..1f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("keyboard_width", if (v > 0.98f) 1f else v) } }
         )
         LandscapeScaleItem(settings)
         SliderItem(
-            icon = Icons.Rounded.EmojiEmotions, title = "Размер эмодзи",
+            icon = Icons.Rounded.EmojiEmotions, title = "Kích thước emoji",
             value = settings.emojiSizeDp, range = 24f..56f,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("emoji_size_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.RoundedCorner, title = "Скругление клавиш",
+            icon = Icons.Rounded.RoundedCorner, title = "Bo góc phím",
             value = settings.cornerRadiusDp, range = 6f..30f,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("corner_radius_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.SpaceBar, title = "Промежуток между клавишами",
+            icon = Icons.Rounded.SpaceBar, title = "Khoảng cách giữa các phím",
             value = settings.keySpacingDp, range = 2f..8f,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("key_spacing_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.Menu, title = "Промежуток между рядами",
+            icon = Icons.Rounded.Menu, title = "Khoảng cách giữa các hàng",
             value = settings.rowSpacingDp, range = 2f..12f,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("row_spacing_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.Straighten, title = "Отступы по бокам",
+            icon = Icons.Rounded.Straighten, title = "Lề hai bên",
             value = settings.sidePaddingDp, range = 0f..32f,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("side_padding_dp", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.VerticalAlignBottom, title = "Отступ снизу",
+            icon = Icons.Rounded.VerticalAlignBottom, title = "Lề dưới",
             value = settings.bottomOffsetDp, range = BOTTOM_OFFSET_RANGE,
             format = { "${it.roundToInt()} dp" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("bottom_offset_dp", v) } }
         )
     }
-    SettingsSection("Режим одной руки") {
+    SettingsSection("Chế độ một tay") {
         ChoiceItem(
-            Icons.Rounded.SwapHoriz, "Положение", "Также включается кнопкой ⇄ на панели инструментов",
-            listOf("OFF" to "Выкл", "LEFT" to "Слева", "RIGHT" to "Справа"), settings.oneHanded
+            Icons.Rounded.SwapHoriz, "Vị trí", "Также включается кнопкой ⇄ на панели инструментов",
+            listOf("OFF" to "Tắt", "LEFT" to "Trái", "RIGHT" to "Phải"), settings.oneHanded
         ) { v -> KeyboardPrefs.edit(context) { putString("one_handed", v) } }
         SliderItem(
-            icon = Icons.Rounded.Straighten, title = "Ширина клавиатуры",
+            icon = Icons.Rounded.Straighten, title = "Chiều rộng bàn phím",
             value = settings.oneHandedWidth, range = 0.55f..0.9f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("one_handed_w", v) } }
         )
     }
-    SettingsSection("Плавающая клавиатура") {
+    SettingsSection("Bàn phím nổi") {
         ToggleItem(
-            Icons.Rounded.PictureInPictureAlt, "Плавающая клавиатура",
+            Icons.Rounded.PictureInPictureAlt, "Bàn phím nổi",
             "Небольшое окно поверх приложения: перетаскивайте за полоску сверху. Также включается кнопкой на панели инструментов",
             settings.floating
         ) { KeyboardPrefs.edit(context) { putBoolean("floating_keyboard", it) } }
@@ -570,32 +570,32 @@ internal fun KeyboardSizePage(settings: KeyboardSettings) {
 @Composable
 internal fun KeysPage(settings: KeyboardSettings, onNavigate: (SettingsPage) -> Unit) {
     val context = LocalContext.current
-    SettingsSection("Клавиши и кнопки") {
-        ToggleItem(Icons.Rounded.Dialpad, "Ряд цифр", null, settings.showNumberRow) {
+    SettingsSection("Phím và nút") {
+        ToggleItem(Icons.Rounded.Dialpad, "Hàng số", null, settings.showNumberRow) {
             KeyboardPrefs.edit(context) { putBoolean("show_number_row", it) }
         }
         AnimatedVisibility(settings.showNumberRow) {
             SliderItem(
-                icon = Icons.Rounded.Height, title = "Высота ряда цифр",
+                icon = Icons.Rounded.Height, title = "Chiều cao hàng số",
                 value = settings.numberRowScale, range = 0.6f..1.1f,
                 format = { "${(it * 100).roundToInt()}%" },
                 onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("number_row_scale", v) } }
             )
         }
         SliderItem(
-            icon = Icons.Rounded.KeyboardReturn, title = "Ширина клавиши ввода",
+            icon = Icons.Rounded.KeyboardReturn, title = "Chiều rộng phím Enter",
             value = settings.enterWidth, range = 1f..1.8f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("enter_width", v) } }
         )
-        ToggleItem(Icons.AutoMirrored.Rounded.Label, "Подсказки на клавишах", "Маленький символ, доступный по удержанию", settings.showHints) {
+        ToggleItem(Icons.AutoMirrored.Rounded.Label, "Gợi ý trên phím", "Маленький символ, доступный по удержанию", settings.showHints) {
             KeyboardPrefs.edit(context) { putBoolean("show_hints", it) }
         }
         ChoiceItem(
-            Icons.Rounded.PanTool, "Удержание буквы",
+            Icons.Rounded.PanTool, "Nhấn giữ chữ",
             if (settings.holdMode == "SYMBOLS") "Символ, который стоит на том же месте на странице «?123», — как в Gboard"
             else "Варианты буквы (ё, ъ, буквы с ударением) и символы",
-            listOf("VARIANTS" to "Варианты", "SYMBOLS" to "Как в Gboard"), settings.holdMode
+            listOf("VARIANTS" to "Tùy chọn", "SYMBOLS" to "Như Gboard"), settings.holdMode
         ) { v -> KeyboardPrefs.edit(context) { putString("hold_mode", v) } }
         ToggleItem(
             Icons.Rounded.ScreenRotation, "Раздельная клавиатура в альбомной",
@@ -604,21 +604,21 @@ internal fun KeysPage(settings: KeyboardSettings, onNavigate: (SettingsPage) -> 
         ) { KeyboardPrefs.edit(context) { putBoolean("landscape_split", it) } }
         ChoiceItem(
             Icons.Rounded.Interests, "Вид окна удержания", "Как выглядят символы, которые всплывают при удержании клавиши",
-            listOf("SHAPE" to "Фигуры", "CIRCLE" to "Круги", "BOX" to "Квадраты", "PANEL" to "Одна панель"), settings.popupStyle
+            listOf("SHAPE" to "Hình dạng", "CIRCLE" to "Hình tròn", "BOX" to "Hình vuông", "PANEL" to "Một bảng"), settings.popupStyle
         ) { v -> KeyboardPrefs.edit(context) { putString("popup_style", v) } }
         ToggleItem(Icons.Rounded.TouchApp, "Всплывающая буква при нажатии", null, settings.keyPreview) {
             KeyboardPrefs.edit(context) { putBoolean("key_preview", it) }
         }
-        ToggleItem(Icons.Rounded.BorderOuter, "Контур клавиш", null, settings.showKeyBorders) {
+        ToggleItem(Icons.Rounded.BorderOuter, "Viền phím", null, settings.showKeyBorders) {
             KeyboardPrefs.edit(context) { putBoolean("show_key_borders", it) }
         }
-        ToggleItem(Icons.Rounded.SelectAll, "Панель редактирования", "Над клавиатурой: курсор, выделение, копировать и вставить", settings.editBar) {
+        ToggleItem(Icons.Rounded.SelectAll, "Thanh chỉnh sửa", "Над клавиатурой: курсор, выделение, копировать и вставить", settings.editBar) {
             KeyboardPrefs.edit(context) { putBoolean("edit_bar", it) }
         }
         ChoiceItem(
             Icons.Rounded.TouchApp, "Удержание кнопки панели функций",
             "Короткое нажатие открывает и закрывает панель инструментов",
-            listOf("PIN" to "Закрепить панель", "EDIT_BAR" to "Панель редактирования"),
+            listOf("PIN" to "Ghim thanh công cụ", "EDIT_BAR" to "Thanh chỉnh sửa"),
             settings.toolsLongPress
         ) { v ->
             KeyboardPrefs.edit(context) {
@@ -627,21 +627,21 @@ internal fun KeysPage(settings: KeyboardSettings, onNavigate: (SettingsPage) -> 
                 if (v == "EDIT_BAR") putBoolean("pinned_tools", false)
             }
         }
-        ToggleItem(Icons.Rounded.Language, "Кнопка смены языка", "Без неё язык меняется свайпом по пробелу", settings.showGlobeKey) {
+        ToggleItem(Icons.Rounded.Language, "Nút đổi ngôn ngữ", "Без неё язык меняется свайпом по пробелу", settings.showGlobeKey) {
             KeyboardPrefs.edit(context) { putBoolean("show_globe_key", it) }
         }
         if (settings.showGlobeKey) {
             val globeActions = listOf(
-                "LANGUAGES" to "Список языков", "SYSTEM" to "Выбор клавиатуры", "EMOJI" to "Эмодзи", "CLIPBOARD" to "Буфер обмена",
-                "VOICE" to "Голосовой ввод", "SETTINGS" to "Настройки", "ONE_HANDED" to "Режим одной руки", "OFF" to "Ничего"
+                "LANGUAGES" to "Danh sách ngôn ngữ", "SYSTEM" to "Chọn bàn phím", "EMOJI" to "Emoji", "CLIPBOARD" to "Bảng nhớ tạm",
+                "VOICE" to "Nhập bằng giọng nói", "SETTINGS" to "Cài đặt", "ONE_HANDED" to "Chế độ một tay", "OFF" to "Không có"
             )
             ChoiceItem(
-                Icons.Rounded.TouchApp, "Удержание кнопки языка",
-                globeActions.firstOrNull { it.first == settings.globeLongPress }?.second ?: "Список языков",
+                Icons.Rounded.TouchApp, "Nhấn giữ nút ngôn ngữ",
+                globeActions.firstOrNull { it.first == settings.globeLongPress }?.second ?: "Danh sách ngôn ngữ",
                 globeActions, settings.globeLongPress
             ) { v -> KeyboardPrefs.edit(context) { putString("globe_long_press", v) } }
         }
-        ToggleItem(Icons.Rounded.MoreHoriz, "Запятая и точка на странице ?123", "По бокам пробела. Удержание — другие знаки: ; : ' \" ? ! …", settings.punctuationKeys) {
+        ToggleItem(Icons.Rounded.MoreHoriz, "Dấu phẩy và dấu chấm ở trang ?123", "По бокам пробела. Удержание — другие знаки: ; : ' \" ? ! …", settings.punctuationKeys) {
             KeyboardPrefs.edit(context) { putBoolean("punctuation_keys", it) }
         }
         ToggleItem(Icons.Rounded.EmojiEmotions, "Кнопка эмодзи", null, settings.showEmojiKey) {
@@ -662,8 +662,8 @@ internal fun KeysPage(settings: KeyboardSettings, onNavigate: (SettingsPage) -> 
             ChoiceItem(
                 Icons.Rounded.TouchApp, "Кнопка справа вверху", "Что делает кнопка микрофона. Удержание — голосовой ввод",
                 listOf(
-                    "VOICE" to "Микрофон", "EMOJI" to "Эмодзи", "CLIPBOARD" to "Буфер", "TRANSLATE" to "Перевод",
-                    "GIF" to "GIF", "UNDO" to "Отменить", "HIDE" to "Скрыть", "LANG" to "Смена языка"
+                    "VOICE" to "Микрофон", "EMOJI" to "Emoji", "CLIPBOARD" to "Буфер", "TRANSLATE" to "Перевод",
+                    "GIF" to "GIF", "UNDO" to "Отменить", "HIDE" to "Скрыть", "LANG" to "Đổi ngôn ngữ"
                 ), settings.micAction
             ) { v -> KeyboardPrefs.edit(context) { putString("mic_action", v) } }
         }
@@ -702,7 +702,7 @@ private fun SpaceSlotItem(icon: ImageVector, title: String, value: String, prefK
     }
     ChoiceItem(
         icon, title, if (selected == "custom") tr("Своя: «{0}»", value) else subtitle,
-        listOf("" to "Нет", "," to ",", "." to ".", "custom" to "Своя…"), selected
+        listOf("" to "Không", "," to ",", "." to ".", "custom" to "Своя…"), selected
     ) { v ->
         if (v == "custom") dialog = true else KeyboardPrefs.edit(context) { putString(prefKey, v) }
     }

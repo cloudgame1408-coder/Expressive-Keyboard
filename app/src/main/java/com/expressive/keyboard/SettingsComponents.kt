@@ -177,13 +177,13 @@ internal fun HeroCard(
             }
             Column(Modifier.weight(1f)) {
                 Text(
-                    tr(if (ready) "Всё готово" else "Почти готово"),
+                    tr(if (ready) "Đã sẵn sàng" else "Sắp hoàn tất"),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold,
                     color = if (ready) cs.onPrimaryContainer else cs.onTertiaryContainer
                 )
                 Text(
-                    tr(if (ready) "Клавиатура включена и выбрана" else "Включите клавиатуру и выберите её по умолчанию"),
+                    tr(if (ready) "Bàn phím đã bật và được chọn" else "Bật bàn phím и выберите её по умолчанию"),
                     style = MaterialTheme.typography.bodyMedium,
                     color = (if (ready) cs.onPrimaryContainer else cs.onTertiaryContainer).copy(alpha = 0.8f)
                 )
@@ -197,9 +197,9 @@ internal fun HeroCard(
             Column(Modifier.clip(RoundedCornerShape(24.dp)), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 // следующий шаг — тот, что ещё не сделан первым: только он залит цветом
                 val next = when { !imeEnabled -> 1; !imeSelected -> 2; !micGranted -> 3; else -> 0 }
-                StepRow(1, "Включить в системе", imeEnabled, "Включить", next == 1, ready, onEnable)
-                StepRow(2, "Выбрать по умолчанию", imeSelected, "Выбрать", next == 2, ready, onSelect)
-                StepRow(3, "Микрофон для голосового ввода", micGranted, "Разрешить", next == 3, ready, onMic)
+                StepRow(1, "Bật trong hệ thống", imeEnabled, "Bật", next == 1, ready, onEnable)
+                StepRow(2, "Chọn mặc định", imeSelected, "Chọn", next == 2, ready, onSelect)
+                StepRow(3, "Micrô dùng cho nhập bằng giọng nói", micGranted, "Cho phép", next == 3, ready, onMic)
             }
         }
     }
@@ -790,7 +790,7 @@ internal fun ColorPickerDialog(
                 }
             }
         },
-        confirmButton = { Button(onClick = { onPick(color.toArgb()) }) { Text(tr("Готово")) } },
+        confirmButton = { Button(onClick = { onPick(color.toArgb()) }) { Text(tr("Hoàn tất")) } },
         dismissButton = {
             Row {
                 if (allowAuto) TextButton(onClick = { onPick(0) }) { Text(tr(autoLabel)) }

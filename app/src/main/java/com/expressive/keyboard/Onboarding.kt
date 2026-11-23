@@ -220,8 +220,8 @@ fun OnboardingScreen(settings: KeyboardSettings, onFinish: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (step == OnbStep.WELCOME) TextButton(onClick = onFinish) { Text(tr("Пропустить")) }
-                    else OutlinedButton(onClick = { go(-1) }, shapes = ButtonDefaults.shapes()) { Text(tr("Назад")) }
+                    if (step == OnbStep.WELCOME) TextButton(onClick = onFinish) { Text(tr("Bỏ qua")) }
+                    else OutlinedButton(onClick = { go(-1) }, shapes = ButtonDefaults.shapes()) { Text(tr("Quay lại")) }
                     Spacer(Modifier.weight(1f))
                     Button(
                         onClick = { if (step == OnbStep.DONE) onFinish() else go(1) },
@@ -230,7 +230,7 @@ fun OnboardingScreen(settings: KeyboardSettings, onFinish: () -> Unit) {
                         modifier = Modifier.heightIn(min = ButtonDefaults.MediumContainerHeight)
                     ) {
                         Text(
-                            tr(when (step) { OnbStep.WELCOME -> "Начать"; OnbStep.DONE -> "Готово"; else -> "Далее" }),
+                            tr(when (step) { OnbStep.WELCOME -> "Bắt đầu"; OnbStep.DONE -> "Hoàn tất"; else -> "Tiếp theo" }),
                             style = MaterialTheme.typography.titleMedium
                         )
                         if (step != OnbStep.DONE) {
@@ -269,14 +269,14 @@ private fun WelcomeStep(settings: KeyboardSettings) {
     Spacer(Modifier.height(32.dp))
     StepBadge(Icons.Rounded.Keyboard, ExpressiveShapePreset.COOKIE_12, settings)
     StepTitle(
-        "Привет! Настроим клавиатуру под вас",
-        "Пять коротких шагов: включить клавиатуру, выбрать тему, сколько будет форм и какие функции нужны. Всё это потом можно поменять в настройках."
+        "Xin chào! Hãy thiết lập bàn phím theo ý bạn",
+        "5 bước ngắn: bật bàn phím, chọn giao diện và các chức năng cần dùng. Bạn có thể đổi lại trong Cài đặt sau."
     )
     SettingsSection(null) {
         AppLanguageItem(settings)
     }
     // после переустановки: вернуть словарь Т9 и настройки из копии
-    T9BackupSection(title = "Переустанавливаете?", compact = true)
+    T9BackupSection(title = "Bạn đang cài đặt lại?", compact = true)
 }
 
 @Composable
@@ -292,19 +292,19 @@ private fun EnableStep() {
         }
     }
     StepTitle(
-        "Включите клавиатуру",
-        "Android спрашивает об этом один раз. Набранный текст никуда не отправляется, кроме функций, которые вы включите сами (например, исправления ИИ)."
+        "Bật bàn phím",
+        "Android chỉ hỏi bước này một lần. Văn bản không được gửi đi, trừ các tính năng bạn tự bật (ví dụ: sửa bằng AI)."
     )
     SettingsSection(null) {
-        OnbCheckItem(1, "Включить в системе", "Откроются настройки Android: включите Expressive Keyboard", enabled) {
+        OnbCheckItem(1, "Bật trong hệ thống", "Откроются настройки Android: включите Expressive Keyboard", enabled) {
             runCatching { context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
-        OnbCheckItem(2, "Выбрать по умолчанию", "Выберите Expressive Keyboard в списке", selected, active = enabled) {
+        OnbCheckItem(2, "Chọn mặc định", "Выберите Expressive Keyboard в списке", selected, active = enabled) {
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
         }
     }
     if (enabled && selected) {
-        Text(tr("Готово — можно идти дальше"), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+        Text(tr("Hoàn tất — можно идти дальше"), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -408,7 +408,7 @@ private fun DoneStep(settings: KeyboardSettings) {
     var text by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf("") }
     Spacer(Modifier.height(16.dp))
     StepBadge(Icons.Rounded.Check, ExpressiveShapePreset.SUNNY_8, settings)
-    StepTitle("Всё готово", "Попробуйте клавиатуру прямо здесь. Тему, формы и функции можно поменять в настройках, они откроются после «Готово».")
+    StepTitle("Đã sẵn sàng", "Попробуйте клавиатуру прямо здесь. Тему, формы и функции можно поменять в настройках, они откроются после «Hoàn tất».")
     PillField(
         text, { text = it }, "Напишите что-нибудь…", Icons.Rounded.Keyboard,
         singleLine = false, keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)

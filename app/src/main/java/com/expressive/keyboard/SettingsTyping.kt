@@ -152,59 +152,59 @@ internal fun TypingPage(settings: KeyboardSettings, part: SettingsPage) {
     LaunchedEffect(part) {
         if (part == SettingsPage.TYPING) nanoStatus = AiFix.nanoStatus(context, "en")
     }
-    if (part == SettingsPage.GESTURES) SettingsSection("Скорость") {
-        ToggleItem(Icons.Rounded.Bolt, "Мгновенный ввод", "Буква появляется в момент касания, а не при отпускании пальца", settings.instantInput) {
+    if (part == SettingsPage.GESTURES) SettingsSection("Tốc độ") {
+        ToggleItem(Icons.Rounded.Bolt, "Nhập tức thì", "Ký tự xuất hiện ngay khi chạm, không cần nhấc ngón tay", settings.instantInput) {
             KeyboardPrefs.edit(context) { putBoolean("instant_input", it) }
         }
     }
-    if (part == SettingsPage.GESTURES) SettingsSection("Печать без отрыва пальца") {
-        ToggleItem(Icons.Rounded.Gesture, "Свайп-набор", "Ведите палец от буквы к букве — слово вставится само, ещё варианты — в подсказках", settings.glideTyping) {
+    if (part == SettingsPage.GESTURES) SettingsSection("Gõ không nhấc ngón tay") {
+        ToggleItem(Icons.Rounded.Gesture, "Gõ vuốt", "Vuốt từ chữ này sang chữ khác để nhập từ; các lựa chọn khác hiện trong gợi ý", settings.glideTyping) {
             KeyboardPrefs.edit(context) { putBoolean("glide_typing", it) }
         }
         AnimatedVisibility(settings.glideTyping) {
-            ToggleItem(Icons.Rounded.Timeline, "След за пальцем", null, settings.glideTrail) {
+            ToggleItem(Icons.Rounded.Timeline, "Theo dấu ngón tay", null, settings.glideTrail) {
                 KeyboardPrefs.edit(context) { putBoolean("glide_trail", it) }
             }
         }
     }
-    if (part == SettingsPage.GESTURES) SettingsSection("Жесты на клавишах") {
-        ToggleItem(Icons.Rounded.North, "Свайп вверх по клавише", "Вводит маленький символ-подсказку без удержания", settings.swipeUpHint) {
+    if (part == SettingsPage.GESTURES) SettingsSection("Thao tác vuốt trên phím") {
+        ToggleItem(Icons.Rounded.North, "Vuốt lên trên phím", "Nhập ký tự phụ mà không cần giữ phím", settings.swipeUpHint) {
             KeyboardPrefs.edit(context) { putBoolean("swipe_up_hint", it) }
         }
         SliderItem(
-            icon = Icons.Rounded.TouchApp, title = "Чувствительность свайпа по клавише",
+            icon = Icons.Rounded.TouchApp, title = "Độ nhạy vuốt trên phím",
             value = settings.flickSensitivity, range = 0f..1f,
             format = { "${(it * 100).roundToInt()}%" },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("flick_sensitivity", v) } }
         )
         SliderItem(
-            icon = Icons.Rounded.Timer, title = "Задержка удержания",
+            icon = Icons.Rounded.Timer, title = "Thời gian nhấn giữ",
             value = settings.longPressMs, range = 180f..700f,
-            format = { "${it.roundToInt()} " + tr("мс") },
+            format = { "${it.roundToInt()} " + tr("ms") },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("long_press_ms", v) } }
         )
-        ToggleItem(Icons.AutoMirrored.Rounded.Backspace, "Свайп влево по ⌫", "Удаляет целые слова", settings.backspaceSwipe) {
+        ToggleItem(Icons.AutoMirrored.Rounded.Backspace, "Vuốt trái trên ⌫", "Xóa cả từ", settings.backspaceSwipe) {
             KeyboardPrefs.edit(context) { putBoolean("backspace_swipe", it) }
         }
     }
-    if (part == SettingsPage.GESTURES) SettingsSection("Пробел") {
+    if (part == SettingsPage.GESTURES) SettingsSection("Phím cách") {
         ChoiceItem(
-            Icons.Rounded.Swipe, "Свайп по пробелу",
+            Icons.Rounded.Swipe, "Vuốt trên phím cách",
             when (settings.spaceSwipe) {
-                "CURSOR" -> "Ведите палец по пробелу — курсор двигается"
-                "LANGUAGE" -> "Свайп меняет язык"
-                "BOTH" -> "Быстрый свайп меняет язык, задержите палец и ведите — курсор"
-                else -> "Жест выключен"
+                "CURSOR" -> "Vuốt trên phím cách để di chuyển con trỏ"
+                "LANGUAGE" -> "Vuốt để đổi ngôn ngữ"
+                "BOTH" -> "Vuốt nhanh để đổi ngôn ngữ; nhấn giữ và vuốt để di chuyển con trỏ"
+                else -> "Thao tác đã tắt"
             },
-            listOf("CURSOR" to "Курсор", "LANGUAGE" to "Язык", "BOTH" to "Оба", "OFF" to "Выкл"), settings.spaceSwipe
+            listOf("CURSOR" to "Con trỏ", "LANGUAGE" to "Ngôn ngữ", "BOTH" to "Cả hai", "OFF" to "Tắt"), settings.spaceSwipe
         ) { v -> KeyboardPrefs.edit(context) { putString("space_swipe", v) } }
         val spaceActions = listOf(
-            "PICKER" to "Выбор клавиатуры", "LANGUAGE" to "Смена языка", "AI_FIX" to "Улучшить текст", "VOICE" to "Голосовой ввод", "EMOJI" to "Эмодзи",
-            "CLIPBOARD" to "Буфер обмена", "TOOLBAR" to "Панель функций", "SETTINGS" to "Настройки", "OFF" to "Ничего"
+            "PICKER" to "Chọn bàn phím", "LANGUAGE" to "Đổi ngôn ngữ", "AI_FIX" to "Cải thiện văn bản", "VOICE" to "Nhập bằng giọng nói", "EMOJI" to "Emoji",
+            "CLIPBOARD" to "Bảng nhớ tạm", "TOOLBAR" to "Thanh công cụ", "SETTINGS" to "Cài đặt", "OFF" to "Không có"
         )
         ChoiceItem(
-            Icons.Rounded.SpaceBar, "Удержание пробела",
-            spaceActions.firstOrNull { it.first == settings.spaceLongAction }?.second ?: "Выбор клавиатуры",
+            Icons.Rounded.SpaceBar, "Nhấn giữ phím cách",
+            spaceActions.firstOrNull { it.first == settings.spaceLongAction }?.second ?: "Chọn bàn phím",
             spaceActions, settings.spaceLongAction
         ) { v ->
             KeyboardPrefs.edit(context) {
@@ -214,26 +214,26 @@ internal fun TypingPage(settings: KeyboardSettings, part: SettingsPage) {
         }
     }
     if (part == SettingsPage.GESTURES) SettingsSection("Enter") {
-        ToggleItem(Icons.Rounded.Send, "Отправка долгим нажатием Enter",
-            "Если приложение поддерживает IME-действие отправки", settings.enterHoldSend
+        ToggleItem(Icons.Rounded.Send, "Gửi bằng cách nhấn giữ Enter",
+            "Nếu ứng dụng hỗ trợ thao tác gửi của IME", settings.enterHoldSend
         ) { KeyboardPrefs.edit(context) { putBoolean("enter_hold_send", it) } }
         if (settings.enterHoldSend) SliderItem(
-            icon = Icons.Rounded.Timer, title = "Задержка удержания Enter",
+            icon = Icons.Rounded.Timer, title = "Thời gian giữ Enter",
             value = settings.enterHoldMs, range = 300f..1500f,
-            format = { "${it.roundToInt()} " + tr("мс") },
+            format = { "${it.roundToInt()} " + tr("ms") },
             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("enter_hold_ms", v) } }
         )
     }
-    if (part == SettingsPage.TYPING) SettingsSection("Калькулятор") {
-        ToggleItem(Icons.Rounded.Calculate, "Ответ после знака «=»",
-            "Например, 199+123= показывает 322. Нажмите на ответ, чтобы вставить его.", settings.inlineCalculator
+    if (part == SettingsPage.TYPING) SettingsSection("Máy tính") {
+        ToggleItem(Icons.Rounded.Calculate, "Hiển thị kết quả sau dấu «=»",
+            "Ví dụ, 199+123= hiển thị 322. Chạm kết quả để chèn.", settings.inlineCalculator
         ) { KeyboardPrefs.edit(context) { putBoolean("inline_calculator", it) } }
     }
-    if (part == SettingsPage.GESTURES) SettingsSection("Удобства") {
-        ToggleItem(Icons.Rounded.DataArray, "Парные скобки", "( [ { « сразу закрываются, курсор встаёт внутрь", settings.autoPair) {
+    if (part == SettingsPage.GESTURES) SettingsSection("Tiện ích") {
+        ToggleItem(Icons.Rounded.DataArray, "Tự đóng ngoặc", "Tự đóng các ngoặc ( [ { « và đặt con trỏ bên trong", settings.autoPair) {
             KeyboardPrefs.edit(context) { putBoolean("auto_pair", it) }
         }
-        ToggleItem(Icons.Rounded.SwipeDown, "Свайп вниз закрывает", "Проведите вниз по строке подсказок — клавиатура скроется", settings.swipeDownHide) {
+        ToggleItem(Icons.Rounded.SwipeDown, "Vuốt xuống để đóng", "Vuốt xuống trên hàng gợi ý để ẩn bàn phím", settings.swipeDownHide) {
             KeyboardPrefs.edit(context) { putBoolean("swipe_down_hide", it) }
         }
     }
@@ -369,9 +369,9 @@ internal fun TypingPage(settings: KeyboardSettings, part: SettingsPage) {
             modelDialog = null
         }
     }
-    if (part == SettingsPage.TYPING) SettingsSection("Исправления") {
+    if (part == SettingsPage.TYPING) SettingsSection("Sửa lỗi") {
         ToggleItem(
-            Icons.Rounded.Spellcheck, "Автоисправление",
+            Icons.Rounded.Spellcheck, "Tự sửa",
             "Исправляет опечатки по пробелу с учётом того, куда попал палец, и частые ошибки («извени», «знаеш»). ⌫ сразу после — отмена",
             settings.autoCorrect
         ) {
@@ -430,30 +430,30 @@ internal fun TypingPage(settings: KeyboardSettings, part: SettingsPage) {
             KeyboardPrefs.edit(context) { putBoolean("dash_merge", it) }
         }
     }
-    if (part == SettingsPage.TYPING) SettingsSection("Приватность") {
-        ToggleItem(Icons.Rounded.VisibilityOff, "Инкогнито", "Не учить новые слова и не запоминать буфер. Кнопка есть и на панели инструментов", settings.incognito) {
+    if (part == SettingsPage.TYPING) SettingsSection("Quyền riêng tư") {
+        ToggleItem(Icons.Rounded.VisibilityOff, "Ẩn danh", "Не учить новые слова и не запоминать буфер. Кнопка есть и на панели инструментов", settings.incognito) {
             KeyboardPrefs.edit(context) { putBoolean("incognito", it) }
         }
     }
-    if (part == SettingsPage.CLIPBOARD) SettingsSection("Буфер обмена") {
+    if (part == SettingsPage.CLIPBOARD) SettingsSection("Bảng nhớ tạm") {
         ToggleItem(
-            Icons.Rounded.ContentPaste, "История буфера",
-            "Хранится только на телефоне и не пропадает, когда клавиатура закрывается. Пароли не сохраняются", settings.clipboardHistory
+            Icons.Rounded.ContentPaste, "Lịch sử bảng nhớ tạm",
+            "Chỉ lưu trên điện thoại, không mất khi đóng bàn phím. Không lưu mật khẩu", settings.clipboardHistory
         ) {
             KeyboardPrefs.edit(context) { putBoolean("clipboard_history", it) }
         }
         AnimatedVisibility(settings.clipboardHistory) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 ChoiceItem(
-                    Icons.Rounded.Schedule, "Сколько хранить", "Закреплённые записи хранятся всегда",
-                    listOf("1H" to "Час", "1D" to "День", "7D" to "Неделю", "30D" to "Месяц", "FOREVER" to "Всегда"), settings.clipboardKeep
+                    Icons.Rounded.Schedule, "Thời gian lưu", "Các mục ghim luôn được lưu",
+                    listOf("1H" to "Một giờ", "1D" to "Một ngày", "7D" to "Một tuần", "30D" to "Một tháng", "FOREVER" to "Luôn luôn"), settings.clipboardKeep
                 ) { v -> KeyboardPrefs.edit(context) { putString("clipboard_keep", v) } }
                 val unlimited = settings.clipboardSize == Int.MAX_VALUE
                 ToggleItem(
-                    Icons.Rounded.AllInclusive, "Без ограничения записей", "Старые записи не удаляются, пока их не сотрёте сами", unlimited
+                    Icons.Rounded.AllInclusive, "Không giới hạn số mục", "Mục cũ không bị xóa cho đến khi bạn tự xóa", unlimited
                 ) { KeyboardPrefs.edit(context) { putInt("clipboard_size", if (it) 0 else 50) } }
                 if (!unlimited) SliderItem(
-                    icon = Icons.Rounded.History, title = "Сколько записей",
+                    icon = Icons.Rounded.History, title = "Số mục lưu",
                     value = settings.clipboardSize.toFloat(), range = 5f..1000f,
                     format = { "${it.roundToInt()}" },
                     onCommit = { v -> KeyboardPrefs.edit(context) { putInt("clipboard_size", v.roundToInt()) } }
@@ -561,7 +561,7 @@ internal fun FeedbackPage(settings: KeyboardSettings) {
                         SliderItem(
                             icon = Icons.Rounded.Timer, title = "Длительность",
                             value = settings.vibrationMs, range = 1f..80f,
-                            format = { "${it.roundToInt()} " + tr("мс") },
+                            format = { "${it.roundToInt()} " + tr("ms") },
                             onDrag = { v -> HapticsEngine.preview(context, HapticMode.CUSTOM, v, settings.vibrationAmplitude) },
                             onCommit = { v -> KeyboardPrefs.edit(context) { putFloat("vibration_ms", v) } }
                         )

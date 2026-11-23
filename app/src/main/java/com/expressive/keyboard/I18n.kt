@@ -18,13 +18,14 @@ object I18n {
     private fun systemLang(): String = when (Locale.getDefault().language) {
         "ru", "uk", "be", "kk", "ky", "tg", "tt", "ba", "uz" -> "ru"
         "es" -> "es"
-        else -> "en"
+        "vi" -> "vi"
+        else -> "vi"
     }
 
     /** setting: SYSTEM, ru или en. */
     fun apply(setting: String) {
         val next = when (setting) {
-            "ru", "en" -> setting
+            "ru", "en", "vi" -> setting
             else -> systemLang()
         }
         if (next != lang) lang = next
@@ -36,6 +37,7 @@ object I18n {
 
 fun tr(ru: String): String = when (I18n.lang) {
     "ru" -> ru
+    "vi" -> VI_STRINGS[ru] ?: ru
     "es" -> ES_EXTRA[ru] ?: ES_STRINGS[ru] ?: EN_EXTRA[ru] ?: EN_STRINGS[ru] ?: ru
     else -> EN_EXTRA[ru] ?: EN_STRINGS[ru] ?: ru
 }
@@ -1441,4 +1443,113 @@ internal val EN_STRINGS: Map<String, String> = hashMapOf(
     "ошибка сети" to "network error",
     "ошибка" to "error",
     "Нет текста для «{0}»" to "No text for “{0}”"
+)
+
+
+// Bản dịch tiếng Việt cho giao diện. Những mục chưa có bản dịch giữ nguyên chuỗi nguồn.
+internal val VI_STRINGS: Map<String, String> = mapOf(
+    "Пропустить" to "Bỏ qua",
+    "Начать" to "Bắt đầu",
+    "Далее" to "Tiếp theo",
+    "Открыть" to "Mở",
+    "Назад" to "Quay lại",
+    "Всё готово" to "Đã hoàn tất",
+    "Почти готово" to "Sắp hoàn tất",
+    "Язык приложения" to "Ngôn ngữ ứng dụng",
+    "Как в системе" to "Theo hệ thống",
+    "Дизайн" to "Thiết kế",
+    "Внешний вид" to "Giao diện",
+    "Набор текста" to "Nhập văn bản",
+    "Отклик и расширения" to "Phản hồi và tiện ích",
+    "Прочее" to "Khác",
+    "Предпросмотр" to "Xem trước",
+    "Тема" to "Chủ đề",
+    "Режим" to "Chế độ",
+    "Авто" to "Tự động",
+    "Светлая" to "Sáng",
+    "Тёмная" to "Tối",
+    "Размер и кнопки" to "Kích thước và nút",
+    "Цвета и фон" to "Màu sắc và hình nền",
+    "Эмодзи и иконки" to "Emoji và biểu tượng",
+    "Панель инструментов" to "Thanh công cụ",
+    "Языки" to "Ngôn ngữ",
+    "Подсказки и исправления" to "Gợi ý và sửa lỗi",
+    "Жесты и скорость" to "Thao tác và tốc độ",
+    "Буфер обмена и GIF" to "Bảng nhớ tạm và GIF",
+    "Вибрация и звук" to "Rung và âm thanh",
+    "Плагины и моды" to "Plugin và mod",
+    "Резервная копия" to "Sao lưu",
+    "О приложении" to "Thông tin ứng dụng",
+    "Тема и шрифт" to "Chủ đề và phông chữ",
+    "Формы" to "Hình dạng",
+    "Включить" to "Bật",
+    "Разрешить" to "Cho phép",
+    "Выбрать" to "Chọn",
+    "Выбрать по умолчанию" to "Đặt làm mặc định",
+    "Включить в системе" to "Bật trong hệ thống",
+    "Найдено: {0}" to "Tìm thấy: {0}",
+    "Ничего не нашлось" to "Không tìm thấy",
+    "Система" to "Hệ thống",
+    "Английский" to "Tiếng Anh",
+    "Русский" to "Tiếng Nga",
+    "Размер" to "Kích thước",
+    "Высота" to "Chiều cao",
+    "Сохранить" to "Lưu",
+    "Отмена" to "Hủy",
+    "Сброс" to "Đặt lại",
+    "Готово" to "Xong",
+    "Удалить" to "Xóa",
+    "Добавить" to "Thêm",
+    "Изменить" to "Chỉnh sửa",
+    "Поиск" to "Tìm kiếm",
+    "Настройки" to "Cài đặt",
+    "Основные" to "Cài đặt chung",
+    "Клавиатура" to "Bàn phím",
+    "Язык" to "Ngôn ngữ",
+    "Текст" to "Văn bản",
+    "Звук" to "Âm thanh",
+    "Вибрация" to "Rung",
+    "Включено" to "Đã bật",
+    "Выключено" to "Đã tắt",
+    "Да" to "Có",
+    "Нет" to "Không",
+    "Скопировать" to "Sao chép",
+    "Вставить" to "Dán",
+    "Очистить" to "Xóa nội dung",
+    "Экспорт" to "Xuất",
+    "Импорт" to "Nhập",
+    "Сбросить настройки" to "Đặt lại cài đặt",
+    "Словарь" to "Từ điển",
+    "Шрифт" to "Phông chữ",
+    "Цвет" to "Màu",
+    "Фон" to "Nền",
+    "Прозрачность" to "Độ trong suốt",
+    "Кнопки" to "Các nút",
+    "Положение" to "Vị trí",
+    "Скорость" to "Tốc độ",
+    "Автоисправление" to "Tự động sửa",
+    "Заглавные буквы" to "Viết hoa",
+    "Пунктуация" to "Dấu câu",
+    "Микрофон" to "Micrô",
+    "Голосовой ввод" to "Nhập bằng giọng nói",
+    "История" to "Lịch sử",
+    "Буфер обмена" to "Bảng nhớ tạm",
+    "Свайп" to "Vuốt",
+    "Слов" to "từ",
+    "Версия" to "Phiên bản",
+    "Лицензии" to "Giấy phép",
+    "Поддержка" to "Hỗ trợ",
+    "Информация" to "Thông tin",
+    "Тест" to "Thử",
+    "Введите текст" to "Nhập văn bản",
+    "Напишите что-нибудь…" to "Hãy nhập nội dung…",
+    "Проверьте клавиатуру здесь…" to "Thử bàn phím tại đây…",
+    "Светлая или тёмная тема, форма акцентов, шрифт, анимации" to "Chế độ sáng hoặc tối, hình dạng điểm nhấn, phông chữ và hoạt ảnh",
+    "Свой цвет, цвета клавиш, прозрачность, картинка под клавишами" to "Màu tùy chỉnh, màu phím, độ trong suốt và ảnh nền",
+    "Высота клавиш, ряд цифр, кнопки у пробела, режим одной руки" to "Chiều cao phím, hàng số, nút cạnh phím cách và chế độ một tay",
+    "Какие кнопки видны и в каком порядке" to "Các nút hiển thị và thứ tự",
+    "Автоисправление, заглавные буквы, знаки препинания" to "Tự sửa, viết hoa và dấu câu",
+    "Сила, длительность и характер отклика" to "Cường độ, thời lượng và kiểu phản hồi",
+    "Экспорт и импорт настроек, сброс, выученные слова" to "Xuất nhập cài đặt, đặt lại và từ đã học",
+    "Версия, возможности и лицензии" to "Phiên bản, tính năng và giấy phép",
 )
